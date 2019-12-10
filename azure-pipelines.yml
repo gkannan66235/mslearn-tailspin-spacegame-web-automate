@@ -147,6 +147,7 @@ stages:
         echo 'storage_account_name = "'$(StorageAccountName)'"' | tee -a backend.tfvars
         echo 'container_name = "tfstate"' | tee -a backend.tfvars
         echo 'key = "test.state"' | tee -a backend.tfvars
+        cat backend.tfvars
         # Initialize Terraform
         terraform init -input=false -backend-config="backend.tfvars"
         # Apply terraform plan

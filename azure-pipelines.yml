@@ -158,7 +158,7 @@ stages:
         WebAppNameTest=$(terraform output appservice_name_test)
         # Write Webapp name variable to pipeline
         echo "##vso[task.setvariable variable=WebAppNameTest;isOutput=true]$WebAppNameTest"
-      name: 'RunTerraform'
+      name: 'RunTerraformTest'
       displayName: 'Run Terraform for Test'
       env: 
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
@@ -168,7 +168,7 @@ stages:
   - deployment: Deploy
     dependsOn: Provision
     variables:
-      WebAppNameTest: $[dependencies.Provision.output['RunTerraform.WebAppNameTest']]
+      WebAppNameTest: $[dependencies.Provision.output['RunTerraformTest.WebAppNameTest']]
     pool:
       vmImage: 'ubuntu-16.04'
     environment: Test

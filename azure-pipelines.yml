@@ -81,6 +81,7 @@ stages:
         set -e
 
         # Write terraform.tfvars.
+        cd dev
         echo 'resource_group_location = "'$(ResourceGroupLocation)'"' | tee terraform.tfvars
         # Write backend.tfvars.
         echo 'resource_group_name = "tf-storage-rg"' | tee backend.tfvars
@@ -141,6 +142,7 @@ stages:
         set -e
 
         # Write terraform.tfvars
+        cd test
         echo 'resource_group_location = "'$(ResourceGroupLocation)'"' | tee terraform.tfvars
         # Write backend.tfvars
         echo 'resource_group_name = "tf-storage-rg"' | tee backend.tfvars

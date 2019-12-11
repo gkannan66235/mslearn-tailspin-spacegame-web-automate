@@ -96,7 +96,7 @@ stages:
 
         # Get the App Service name for the dev environment.
         WebAppNameDev=$(terraform output appservice_name_dev)
-        echo '$(WebAppNameDev)'
+        echo "$(WebAppNameDev)"
         # Write the WebAppNameDev variable to the pipeline.
         echo "##vso[task.setvariable variable=WebAppNameDev;isOutput=true]$WebAppNameDev"
       name: 'RunTerraform'
@@ -156,7 +156,7 @@ stages:
         terraform apply -input=false -auto-approve
         # Get the app service name for Test environment
         WebAppNameTest=$(terraform output appservice_name_test)
-        echo '$(WebAppNameTest)'
+        echo "$(WebAppNameTest)"
         # Write Webapp name variable to pipeline
         echo "##vso[task.setvariable variable=WebAppNameTest;isOutput=true]$WebAppNameTest"
       name: 'RunTerraformTest'

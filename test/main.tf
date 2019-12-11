@@ -24,11 +24,6 @@ variable "app_service_name_prefix" {
   description = "The beginning part of your App Service host name"
 }
 
-resource "random_integer" "app_service_name_suffix" {
-  min = 1000
-  max = 9999
-}
-
 resource "azurerm_resource_group" "spacegame" {
   name     = "${var.resource_group_name}"
   location = "${var.resource_group_location}"
@@ -48,7 +43,7 @@ resource "azurerm_app_service_plan" "spacegame" {
 }
 
 resource "azurerm_app_service" "spacegame_test" {
-  name                = "${var.app_service_name_prefix}-test-${random_integer.app_service_name_suffix.result}"
+  name                = "${var.app_service_name_prefix}-test"
   location            = "${azurerm_resource_group.spacegame.location}"
   resource_group_name = "${azurerm_resource_group.spacegame.name}"
   app_service_plan_id = "${azurerm_app_service_plan.spacegame.id}"

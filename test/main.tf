@@ -47,18 +47,6 @@ resource "azurerm_app_service_plan" "spacegame" {
   }
 }
 
-resource "azurerm_app_service" "spacegame_dev" {
-  name                = "${var.app_service_name_prefix}-dev-${random_integer.app_service_name_suffix.result}"
-  location            = "${azurerm_resource_group.spacegame.location}"
-  resource_group_name = "${azurerm_resource_group.spacegame.name}"
-  app_service_plan_id = "${azurerm_app_service_plan.spacegame.id}"
-
-  site_config {
-    linux_fx_version = "DOTNETCORE|2.1"
-    app_command_line = "dotnet Tailspin.SpaceGame.Web.dll"
-  }
-}
-
 resource "azurerm_app_service" "spacegame_test" {
   name                = "${var.app_service_name_prefix}-test-${random_integer.app_service_name_suffix.result}"
   location            = "${azurerm_resource_group.spacegame.location}"
@@ -70,16 +58,6 @@ resource "azurerm_app_service" "spacegame_test" {
     app_command_line = "dotnet Tailspin.SpaceGame.Web.dll"
   }
 }
-
-output "appservice_name_dev" {
-  value       = "${azurerm_app_service.spacegame_dev.name}"
-  description = "The App Service name for the dev environment"
-}
-output "website_hostname_dev" {
-  value       = "${azurerm_app_service.spacegame_dev.default_site_hostname}"
-  description = "The hostname of the website in the dev environment"
-}
-
 output "appservice_name_test" {
   value       = "${azurerm_app_service.spacegame_test.name}"
   description = "The App Service name for the test environment"

@@ -129,10 +129,10 @@ stages:
 
 - stage: 'Test'
   displayName: 'Deploy to the Test environment'
-  dependsOn: Dev
+  dependsOn: Build
   jobs:
-  - job: Provision
-    displayName: 'Provision Test Azure App service'
+  - job: ProvisionTest
+    displayName: 'Provision Test Azure App Service'
     pool:
       vmImage: 'ubuntu-16.04'
     variables:
@@ -142,27 +142,28 @@ stages:
         # Exit when any command returns a failure status.
         set -e
 
-        # Write terraform.tfvars
-        cd test
+        # Write terraform.tfvars.
+        cd Test
         echo 'resource_group_location = "'$(ResourceGroupLocation)'"' | tee terraform.tfvars
-        # Write backend.tfvars
+        # Write backend.tfvars.
         echo 'resource_group_name = "tf-storage-rg"' | tee backend.tfvars
         echo 'storage_account_name = "'$(StorageAccountName)'"' | tee -a backend.tfvars
         echo 'container_name = "tfstate"' | tee -a backend.tfvars
-        echo 'key = "test.state"' | tee -a backend.tfvars
-        cat backend.tfvars
-        # Initialize Terraform
+        echo 'key = "test.tfstate"' | tee -a backend.tfvars
+
+        # Initialize Terraform.
         terraform init -input=false -backend-config="backend.tfvars"
-        # Apply terraform plan
+        # Apply the Terraform plan.
         terraform apply -input=false -auto-approve
-        # Get the app service name for Test environment
+
+        # Get the App Service name for the Test environment.
         WebAppNameTest=$(terraform output appservice_name_test)
         echo "$(WebAppNameTest)"
-        # Write Webapp name variable to pipeline
+        # Write the WebAppNameTest variable to the pipeline.
         echo "##vso[task.setvariable variable=WebAppNameTest;isOutput=true]$WebAppNameTest"
-      name: 'RunTerraformTest'
-      displayName: 'Run Terraform for Test'
-      env: 
+      name: 'RunTerraform'
+      displayName: 'Run Test Terraform'
+      env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
@@ -170,11 +171,11 @@ stages:
   - deployment: Deploy
     dependsOn: Provision
     variables:
-      WebAppNameTest: $[dependencies.Provision.output['RunTerraformTest.WebAppNameTest']]
+      WebAppNameTest: $[ dependencies.ProvisionTest.outputs['RunTerraform.WebAppNameTest'] ]
     pool:
       vmImage: 'ubuntu-16.04'
     environment: Test
-    strategy: 
+    strategy:
       runOnce:
         deploy:
           steps:
@@ -182,15 +183,9 @@ stages:
             artifact: drop
           - script: echo '$(WebAppNameTest)'
           - task: AzureWebApp@1
-            displayName: 'Azure App service deploy website'
+            displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'TW'
               appName: '$(WebAppNameTest)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
-
-
-
-
-
-
 

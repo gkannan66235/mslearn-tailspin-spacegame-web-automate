@@ -91,7 +91,6 @@ stages:
         echo 'key = "dev.tfstate"' | tee -a backend.tfvars
         echo 'access_key = "fePcenpNwZcMAqEFJaFeN3rKHIB74uHmh+5ZI7WitGloVNmCckCGGFzzp5dadPqVY//06GHjBhtDehqCycT2Uw=="' | tee -a backend.tfvars
 
-
         # Initialize Terraform.
         terraform init -input=false -backend-config="backend.tfvars"
         # Apply the Terraform plan.

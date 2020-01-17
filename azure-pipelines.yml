@@ -84,7 +84,6 @@ stages:
         cd dev
         echo 'resource_group_location = "'$(ResourceGroupLocation)'"' | tee terraform.tfvars
         # Write backend.tfvars.
-        echo 'subscription_id = "'$(tfsubscription)'"' | tee backend.tfvars
         echo 'resource_group_name = "azdevopsrg"' | tee -a backend.tfvars
         echo 'storage_account_name = "'$(StorageAccountName)'"' | tee -a backend.tfvars
         echo 'container_name = "tfstate"' | tee -a backend.tfvars
@@ -148,7 +147,6 @@ stages:
         cd test
         echo 'resource_group_location = "'$(ResourceGroupLocation)'"' | tee terraform.tfvars
         # Write backend.tfvars.
-        echo 'subscription_id = "'$(tfsubscription)'"' | tee backend.tfvars
         echo 'resource_group_name = "azdevopsrg"' | tee -a backend.tfvars
         echo 'storage_account_name = "'$(StorageAccountName)'"' | tee -a backend.tfvars
         echo 'container_name = "tfstate"' | tee -a backend.tfvars
